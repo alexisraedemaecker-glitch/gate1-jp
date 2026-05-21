@@ -1151,6 +1151,75 @@ input[type="range"]::-moz-range-thumb {
 }
 .conviction-block .text em { color: var(--purple-light); font-style: italic; font-weight: 400; }
 
+/* Presenter "Carte des 15 leviers" — collapsible per opp */
+details.opp-detail {
+  background: var(--white);
+  border: 1px solid var(--periwinkle-deep);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+details.opp-detail:hover { border-color: var(--purple-light); }
+details.opp-detail[open] { box-shadow: var(--shadow-sm); border-color: var(--purple-light); }
+details.opp-detail > summary { list-style: none; cursor: pointer; }
+details.opp-detail > summary::-webkit-details-marker { display: none; }
+
+.opp-detail-head {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 16px; align-items: center;
+  padding: 14px 18px;
+}
+.opp-detail-left { display: flex; align-items: center; gap: 6px; }
+.opp-detail-ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; font-weight: 700; color: var(--purple);
+  letter-spacing: 0.04em;
+}
+.opp-detail-head .chev {
+  color: var(--grey); font-size: 12px; transition: transform 0.2s;
+}
+details.opp-detail[open] .opp-detail-head .chev { transform: rotate(180deg); }
+
+.opp-detail-mid .ti {
+  font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px;
+  color: var(--navy); letter-spacing: -0.01em; line-height: 1.25;
+}
+.opp-detail-mid .sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.opp-detail-mid .meta {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
+  font-size: 11px; color: var(--ink-soft);
+  align-items: center;
+}
+.opp-detail-mid .meta-bit b { color: var(--navy); font-weight: 600; }
+
+.opp-detail-right { text-align: right; min-width: 110px; }
+.opp-detail-right .gain {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--ink-soft);
+  font-weight: 600;
+}
+.opp-detail-right .sc {
+  background: var(--periwinkle); color: var(--navy);
+  display: inline-block;
+  padding: 3px 10px; border-radius: 99px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 12px;
+  margin-top: 4px;
+}
+
+.opp-detail-body {
+  padding: 4px 18px 18px;
+  border-top: 1px solid var(--periwinkle);
+  background: var(--cream);
+}
+
+@media (max-width: 700px) {
+  .opp-detail-head { grid-template-columns: 50px 1fr; row-gap: 8px; }
+  .opp-detail-right { grid-column: 1 / -1; text-align: left; }
+}
+
 .recap-row {
   display: grid; grid-template-columns: 80px 1fr 100px 80px;
   gap: 14px; padding: 12px 14px;

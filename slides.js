@@ -289,7 +289,7 @@
     title: "Ce que Walibi et Disney font sur nos leviers",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "02 · Benchmark · Deep dive"),
-      h("h2", { class: "slide-title" }, "Ce que Walibi et Disney font<br>sur nos leviers"),
+      h("h2", { class: "slide-title", html: "Ce que Walibi et Disney font<br>sur nos leviers" }),
       h("p", { class: "slide-lede" }, "Analyse croisée par levier — et ce que JP peut en tirer."),
       h("div", { class: "card", style: "padding:14px; overflow-x:auto" }, buildWalibiDisneyTable()),
       h("div", { class: "card", style: "margin-top:18px; background:linear-gradient(180deg, var(--periwinkle) 0%, var(--white) 100%); border-color:var(--purple-light)" },
@@ -383,7 +383,7 @@
     title: "Ce que la Phase 2 doit nous apprendre",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "05 · Phase 2 · Apprentissages"),
-      h("h2", { class: "slide-title" }, "Ce que la Phase 2<br>doit nous apprendre"),
+      h("h2", { class: "slide-title", html: "Ce que la Phase 2<br>doit nous apprendre" }),
       h("p", { class: "slide-lede" }, "Focus sur les 5 leviers prioritaires · Question business → Segment → Méthode → Décision Gate #2."),
       h("div", { class: "card", style: "padding:14px; overflow-x:auto" }, buildPhase2Table()),
       h("div", { class: "card", style: "margin-top:18px; background:linear-gradient(180deg, var(--periwinkle) 0%, var(--white) 100%); border-color:var(--purple-light)" },
@@ -724,24 +724,104 @@
 
   function buildOppRecap() {
     const wrap = h("div", null);
+
+    // Master toggle "Tout déplier / Replier"
+    const masterCtrl = h("div", { style: "display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px" },
+      h("button", {
+        class: "btn btn-secondary", style: "font-size:12px; padding:6px 12px",
+        onClick: () => { wrap.querySelectorAll("details.opp-detail").forEach(d => d.setAttribute("open", "")); }
+      }, "Tout déplier"),
+      h("button", {
+        class: "btn btn-secondary", style: "font-size:12px; padding:6px 12px",
+        onClick: () => { wrap.querySelectorAll("details.opp-detail").forEach(d => d.removeAttribute("open")); }
+      }, "Tout replier")
+    );
+    wrap.appendChild(masterCtrl);
+
     const families = [
       { key: "convergence", label: "Convergences chiffrables (1.x)", color: "var(--emerald)" },
       { key: "desaccord", label: "Désaccords à arbitrer (2.x)", color: "var(--amber)" }
     ];
     families.forEach(f => {
-      wrap.appendChild(h("div", { class: "title-sm", style: `margin-top:18px; color:${f.color}` }, f.label));
+      wrap.appendChild(h("div", { class: "title-sm", style: `margin-top:16px; color:${f.color}` }, f.label));
       (window.OPPORTUNITIES || []).filter(o => o.family === f.key).forEach(o => {
-        wrap.appendChild(h("div", { class: "recap-row" },
-          h("div", { class: "num" }, o.ref),
-          h("div", null,
-            h("div", { class: "ti" }, o.title),
-            h("div", { style: "font-size:12px; color:var(--ink-soft); margin-top:2px" }, o.subtitle)),
-          h("div", { class: "gain" }, o.gain_range),
-          h("div", { class: "sc" }, o.score_verdeen.total + "/15")
-        ));
+        wrap.appendChild(buildOppDetailRow(o));
       });
     });
     return wrap;
+  }
+
+  function buildOppDetailRow(o) {
+    const outilTag = (function () {
+      if (!o.outil) return null;
+      const s = o.outil.toLowerCase();
+      let cls = "tag-int";
+      if (s.startsWith("ext")) cls = "tag-ext";
+      else if (s.startsWith("mixte")) cls = "tag-mixte";
+      return h("span", { class: "tag " + cls, style: "font-size:10px; padding:2px 8px" }, o.outil);
+    })();
+
+    // Sommaire (always-visible header row)
+    const summary = h("summary", { class: "opp-detail-head" },
+      h("div", { class: "opp-detail-left" },
+        h("span", { class: "opp-detail-ref" }, o.ref),
+        h("span", { class: "chev" }, "▾")
+      ),
+      h("div", { class: "opp-detail-mid" },
+        h("div", { class: "ti" }, o.title),
+        h("div", { class: "sub" }, o.subtitle),
+        h("div", { class: "meta" },
+          outilTag,
+          o.owner_unibox && h("span", { class: "meta-bit" }, "Owner · ", h("b", null, o.owner_unibox)),
+          o.tempo && h("span", { class: "meta-bit" }, "⏱ ", h("b", null, o.tempo)),
+          o.convergence_label && h("span", { class: "meta-bit", style: "color:var(--purple)" }, o.convergence_label)
+        )
+      ),
+      h("div", { class: "opp-detail-right" },
+        h("div", { class: "gain" }, o.gain_range),
+        h("div", { class: "sc" }, o.score_verdeen.total + "/15")
+      )
+    );
+
+    // Body — triple synthèse + observed/hypothesis/à tester
+    const body = h("div", { class: "opp-detail-body" });
+
+    if (o.ce_quon_observe || o.ce_quon_deduit || o.comment_on_valide) {
+      const triple = h("div", { class: "triple-block" });
+      if (o.ce_quon_observe) triple.appendChild(h("div", null,
+        h("div", { class: "ti" }, "CE QU'ON OBSERVE"),
+        h("div", { class: "body" }, o.ce_quon_observe)));
+      if (o.ce_quon_deduit) triple.appendChild(h("div", null,
+        h("div", { class: "ti" }, "CE QU'ON EN DÉDUIT"),
+        h("div", { class: "body" }, o.ce_quon_deduit)));
+      if (o.comment_on_valide) triple.appendChild(h("div", null,
+        h("div", { class: "ti" }, "COMMENT ON VALIDE"),
+        h("div", { class: "body" }, o.comment_on_valide)));
+      body.appendChild(triple);
+    }
+
+    if (o.observe_data || o.hypothese || o.a_tester) {
+      const dist = h("div", { class: "triple-block", style: "margin-top:10px" });
+      if (o.observe_data) dist.appendChild(h("div", { style: "background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.3)" },
+        h("div", { class: "ti", style: "color:var(--emerald)" }, "✓ OBSERVÉ"),
+        h("div", { class: "body" }, o.observe_data)));
+      if (o.hypothese) dist.appendChild(h("div", { style: "background:rgba(123,128,212,0.06); border-color:rgba(123,128,212,0.3)" },
+        h("div", { class: "ti", style: "color:var(--purple)" }, "🔬 HYPOTHÈSE"),
+        h("div", { class: "body" }, o.hypothese)));
+      if (o.a_tester) dist.appendChild(h("div", { style: "background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.35)" },
+        h("div", { class: "ti", style: "color:var(--amber)" }, "⏳ À TESTER"),
+        h("div", { class: "body" }, o.a_tester)));
+      body.appendChild(dist);
+    }
+
+    if (o.reco_verdeen) {
+      body.appendChild(h("div", { style: "margin-top:10px; padding:10px 14px; background:var(--navy); color:var(--white); border-radius:8px; font-size:12.5px; line-height:1.55" },
+        h("span", { style: "font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; letter-spacing:0.08em; opacity:0.7; display:block; margin-bottom:4px" }, "RECO VERDEEN"),
+        o.reco_verdeen));
+    }
+
+    const details = h("details", { class: "opp-detail" }, summary, body);
+    return details;
   }
 
   // ============================================================
