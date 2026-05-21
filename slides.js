@@ -85,7 +85,7 @@
     title: "Trois décisions à sortir de la salle",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "Objectifs"),
-      h("h2", { class: "slide-title" }, "Trois décisions à sortir<br>de la salle ce matin"),
+      h("h2", { class: "slide-title", html: "Trois décisions à sortir<br>de la salle ce matin" }),
       h("p", { class: "slide-lede" }, "À 10h00, nous devons avoir collectivement acté ces trois jalons."),
       h("div", { class: "slide-cols-3" },
         objCard("01", "Priorité", "5 leviers prioritaires", "Sélection collective des leviers à activer en priorité — Atelier 1 (22 min). Vote silencieux puis matrice consolidée. Discussion sur les leviers à plus forte dispersion."),
@@ -160,7 +160,7 @@
     title: "Le F&B aujourd'hui",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "01 · Diagnostic F&B"),
-      h("h2", { class: "slide-title" }, "Le F&B Baloo Bar<br>pèse autant que les entrées"),
+      h("h2", { class: "slide-title", html: "Le F&amp;B Baloo Bar<br>pèse autant que les entrées" }),
       h("p", { class: "slide-lede" }, "Données ticketing 30 jours observés (19 avril → 18 mai 2026) · 3 009 tickets · à étendre Phase 2."),
       h("div", { class: "slide-cols-3" },
         kpiBig("335 k€", "PROJECTION CA F&B", "Sur base 30j × ~247j ouverture/an · 1 360€/jour"),
@@ -226,7 +226,7 @@
     title: "Positionnement marché",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "01 · Benchmark"),
-      h("h2", { class: "slide-title" }, "Bien positionné en facial.<br><em>Sous-monétise les leviers annexes.</em>"),
+      h("h2", { class: "slide-title", html: "Bien positionné en facial.<br><em>Sous-monétise les leviers annexes.</em>" }),
       h("p", { class: "slide-lede" }, "Zone élargie BE + Nord FR + Aix-la-Chapelle (~45 min) + Center Parcs Vielsalm · Prix publics mai 2026."),
       h("div", { class: "card", style: "padding:14px; overflow-x:auto" },
         benchTable())
@@ -239,7 +239,7 @@
     title: "Notre conviction centrale",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "01 · Conviction"),
-      h("h2", { class: "slide-title" }, "Ce que les entretiens, les chiffres<br>et le benchmark nous disent ensemble"),
+      h("h2", { class: "slide-title", html: "Ce que les entretiens, les chiffres<br>et le benchmark nous disent ensemble" }),
 
       h("div", { class: "conviction-block" },
         h("div", { class: "label" }, "Notre conviction"),
@@ -264,9 +264,41 @@
     title: "Carte des 15 leviers",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "02 · Opportunités"),
-      h("h2", { class: "slide-title" }, "15 leviers chiffrables<br>structurés en 3 familles"),
+      h("h2", { class: "slide-title", html: "15 leviers chiffrables<br>structurés en 3 familles" }),
       h("p", { class: "slide-lede" }, "Présélection Verdeen · 5 leviers prioritaires = potentiel 156-243 k€/an chiffrable + 7 leviers à quantifier Phase 2."),
       buildOppRecap()
+    )
+  });
+
+  // ---------- 10b · BEST PRACTICES PAR LEVIER ----------
+  slides.push({
+    eyebrow: "02 · Benchmark · Best practices",
+    title: "Pour chaque levier, un acteur qui l'a fait",
+    build: () => h("div", null,
+      h("div", { class: "slide-eyebrow" }, "02 · Benchmark · Best practices"),
+      h("h2", { class: "slide-title" }, "Pour chaque levier, un acteur qui l'a fait"),
+      h("p", { class: "slide-lede" }, "Meilleures pratiques sectorielles — un exemple par levier. Chaque levier identifié fonctionne déjà à grande échelle."),
+      h("div", { class: "card", style: "padding:14px; overflow-x:auto" }, buildBestPracticesTable()),
+      h("p", { class: "cite-source", style: "margin-top:14px" }, "Sources : sites publics mai 2026 · Verdeen Strategy & Analytics")
+    )
+  });
+
+  // ---------- 10c · WALIBI & DISNEY DEEP-DIVE ----------
+  slides.push({
+    eyebrow: "02 · Benchmark · Deep dive",
+    title: "Ce que Walibi et Disney font sur nos leviers",
+    build: () => h("div", null,
+      h("div", { class: "slide-eyebrow" }, "02 · Benchmark · Deep dive"),
+      h("h2", { class: "slide-title" }, "Ce que Walibi et Disney font<br>sur nos leviers"),
+      h("p", { class: "slide-lede" }, "Analyse croisée par levier — et ce que JP peut en tirer."),
+      h("div", { class: "card", style: "padding:14px; overflow-x:auto" }, buildWalibiDisneyTable()),
+      h("div", { class: "card", style: "margin-top:18px; background:linear-gradient(180deg, var(--periwinkle) 0%, var(--white) 100%); border-color:var(--purple-light)" },
+        h("div", { class: "title-sm", style: "color:var(--purple)" }, "LECTURE VERDEEN"),
+        h("p", null,
+          "JP n'a pas vocation à devenir Walibi ou Disney. Mais ces acteurs prouvent que ",
+          h("b", { style: "color:var(--navy)" }, "chaque levier identifié fonctionne à grande échelle"),
+          ". Notre mission : adapter au format « sortie cinéma » de JP (budget 35€ famille, impulse, pas planifié).")
+      )
     )
   });
 
@@ -315,7 +347,7 @@
     title: "Priorisation collective · Impact × Facilité",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "Atelier 1 · 22 minutes"),
-      h("h2", { class: "slide-title" }, "Vote individuel anonyme<br>puis discussion structurée"),
+      h("h2", { class: "slide-title", html: "Vote individuel anonyme<br>puis discussion structurée" }),
       h("p", { class: "slide-lede" }, "Chaque participant ouvre l'app sur son téléphone, vote silencieusement chaque levier sur 2 axes : Impact (1-5) et Facilité (1-5)."),
       h("div", { class: "card", style: "padding:0; overflow:hidden" },
         timelineDark("2 min", "Explication", "Ouverture de l'app sur smartphone. Chaque participant voit les 15 leviers présélectionnés. Tap sur un levier pour voir sa fiche."),
@@ -334,7 +366,7 @@
     title: "Arbitrage · GO / WTP / PARK",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "Atelier 2 · 18 minutes"),
-      h("h2", { class: "slide-title" }, "4 catégories pour éviter<br>le faux GO direct"),
+      h("h2", { class: "slide-title", html: "4 catégories pour éviter<br>le faux GO direct" }),
       h("p", { class: "slide-lede" }, "Pour chaque levier priorisé, arbitrage en 4 options. Évite le faux GO direct sur des leviers qui exigent calibrage WTP."),
       h("div", { class: "slide-cols-2" },
         arbCat("🟢", "GO IMMÉDIAT", "D'ici 2 semaines", "Action décidée en séance — déployable sans WTP préalable. Owner Unibox + owner Verdeen + deadline en CR du 25 mai. Ex : fix wording funnel · bascule comm « journée illimitée »."),
@@ -345,13 +377,31 @@
     )
   });
 
+  // ---------- 13b · CE QUE LA PHASE 2 VA NOUS APPRENDRE ----------
+  slides.push({
+    eyebrow: "05 · Phase 2",
+    title: "Ce que la Phase 2 doit nous apprendre",
+    build: () => h("div", null,
+      h("div", { class: "slide-eyebrow" }, "05 · Phase 2 · Apprentissages"),
+      h("h2", { class: "slide-title" }, "Ce que la Phase 2<br>doit nous apprendre"),
+      h("p", { class: "slide-lede" }, "Focus sur les 5 leviers prioritaires · Question business → Segment → Méthode → Décision Gate #2."),
+      h("div", { class: "card", style: "padding:14px; overflow-x:auto" }, buildPhase2Table()),
+      h("div", { class: "card", style: "margin-top:18px; background:linear-gradient(180deg, var(--periwinkle) 0%, var(--white) 100%); border-color:var(--purple-light)" },
+        h("div", { class: "title-sm", style: "color:var(--purple)" }, "GATE #2 — 12 JUIN 2026"),
+        h("p", null,
+          "Sortie : ",
+          h("b", { style: "color:var(--navy)" }, "prix cible par levier ± 0,50€"),
+          " + architecture pricing dynamique + composition bundle + re-pricing anniversaires. Leviers non priorisés (Phase 2 long-tail) intègrent Wave 4-5 + analyse data."))
+    )
+  });
+
   // ---------- 14 · PHASE 2 ENQUÊTE ----------
   slides.push({
     eyebrow: "05 · Phase 2",
     title: "Plan d'enquête WTP",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "05 · Phase 2"),
-      h("h2", { class: "slide-title" }, "Plan d'enquête WTP<br>· 5 vagues fieldwork"),
+      h("h2", { class: "slide-title", html: "Plan d'enquête WTP<br>· 5 vagues fieldwork" }),
       h("p", { class: "slide-lede" }, "Wave 1 démarre mercredi 27 mai · ~275 répondants visés (capacité max 355) · plancher minimal 120 répondants."),
 
       h("div", { class: "title-sm" }, "POPULATIONS À APPROCHER"),
@@ -379,7 +429,7 @@
     title: "5 validations spécifiques d'Unibox",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "05 · Engagements Unibox"),
-      h("h2", { class: "slide-title" }, "5 validations pour démarrer<br>Wave 1 le 27 mai"),
+      h("h2", { class: "slide-title", html: "5 validations pour démarrer<br>Wave 1 le 27 mai" }),
       h("p", { class: "slide-lede" }, "Owners nominatifs · Deadlines fermes · Compte-rendu écrit envoyé lundi 25 mai."),
       h("div", { class: "card" },
         validation("PRIX", "Calibration des prix testés", "Confirmer les 4 ancres prix pour chaque levier WTP : Aventuriers 14/15,50/17/19€ · Explorateurs 7/9/10,50/12€ · Anniversaires 19,50/24/27/30€ · Pass parent 14/19/25/35€.", "Owner : Vincent + Patrice · Lundi 25 mai"),
@@ -397,7 +447,7 @@
     title: "Merci · Prochaines étapes",
     build: () => h("div", null,
       h("div", { class: "slide-eyebrow" }, "06 · Closing"),
-      h("h2", { class: "slide-title" }, "Trois étapes jusqu'au<br>Gate #2 du 12 juin"),
+      h("h2", { class: "slide-title", html: "Trois étapes jusqu'au<br>Gate #2 du 12 juin" }),
       h("div", { class: "slide-cols-3", style: "margin-top:30px" },
         nextStep("Lun 25 mai", "Compte-rendu Gate #1", "Verdeen envoie le CR formel des décisions et engagements pris ce matin. 1 ligne = 1 owner + 1 deadline."),
         nextStep("Mer 27 mai → Mer 10 juin", "Phase 2 — Fieldwork", "5 vagues d'enquête WTP in-park · ~275 répondants visés · Conjointly v1 · Tablette in-park · 4-6 min/répondant."),
@@ -546,6 +596,127 @@
         else if (v === "✗") cls = "no";
         tr.appendChild(h("td", { class: cls }, v));
       });
+      tbl.appendChild(tr);
+    });
+    return tbl;
+  }
+
+  function buildBestPracticesTable() {
+    const rows = [
+      ["1.5", "Variabilité prix", "Plopsa", "Ticket daté dès 24€ vs non daté 32€ (Indoor Hasselt). Plopsaland De Panne dès 38€ daté vs 51€ guichet."],
+      ["1.1", "Peak pricing", "Center Parcs", "Tarif after-17h réduit pour lisser la demande hors peak. Variable par saison, jour et créneau."],
+      ["1.3", "Calendrier événementiel", "Europa-Park", "Billet adulte de 67€ (basse saison) à 76€ (haute saison) en 2026, +10€ au guichet vs en ligne. Halloween (Traumatica) = billet séparé dès 33€."],
+      ["1.6", "Upsell dynamique", "easyJet", "Dernières places = seul le tarif Flexi disponible. Architecture de choix réduite avec le remplissage."],
+      ["1.2", "Bundle all-in", "McDonald's", "Le menu (bundle entrée + boisson + accomp.) représente ~70% des commandes vs à la carte."],
+      ["1.10", "Architecture decoy", "Apple", "iPhone 3 tiers (bon / meilleur / premium) avec le tier milieu calibré comme decoy vers le haut."],
+      ["1.13", "Différentiel online", "Plopsa / Europa", "Plopsa : écart 8-13€ entre ticket daté online et guichet. Europa-Park : +10€ systématique sur place."],
+      ["1.4", "Monétisation temps", "Plopsa / Center Parcs", "Vendent à la journée. Perception « illimitée » = valeur perçue supérieure. JP vend 3h."],
+      ["1.8", "Parking", "Walibi / Kinepolis", "Walibi : 13€/voiture/jour. Kinepolis : parking validé en caisse (tarif réduit client, plein tarif non-client)."],
+      ["1.14", "Merchandising", "Disney", "Sortie obligatoire par la boutique + photo souvenir opt-out. Merch = 30-40% du CA total."],
+      ["3.3", "Abonnement", "Plopsa", "Pass multi-parcs 3 paliers (Park / Swim / Premium) dès 11,50€/mois. 50% de réduction dans 70+ parcs partenaires."],
+      ["2.2", "Pass parent", "Kinderstadt Heerlen", "Parent paye le même tarif que l'enfant (14€) avec accès complet. Modèle flat all-ages."]
+    ];
+    const tbl = h("table", { class: "bench-table" });
+    const head = h("tr", null,
+      h("th", null, "Levier"),
+      h("th", null, "Sujet"),
+      h("th", null, "Référence"),
+      h("th", null, "Meilleure pratique observée"));
+    tbl.appendChild(head);
+    rows.forEach(r => {
+      const tr = h("tr", null);
+      r.forEach((v, i) => {
+        if (i === 0) tr.appendChild(h("td", { style: "font-family:'JetBrains Mono',monospace; color:var(--purple); font-weight:600; white-space:nowrap" }, v));
+        else if (i === 2) tr.appendChild(h("td", { style: "font-family:'Fraunces',serif; color:var(--navy); font-weight:600" }, v));
+        else tr.appendChild(h("td", null, v));
+      });
+      tbl.appendChild(tr);
+    });
+    return tbl;
+  }
+
+  function buildWalibiDisneyTable() {
+    const rows = [
+      ["Variabilité prix",
+        "4 périodes tarifaires en 2026. Ticket daté dès 29€ (early bird basse saison) vs 56€ non daté guichet. Écart ~27€ entre tarif plancher et plein tarif.",
+        "Revenue management quotidien — prix change chaque jour selon demande prédictive. Écart jusqu'à 2× entre off-peak et peak."],
+      ["Événementiel",
+        "Ibilaw (Halloween) = 2e pic annuel. Nocturnes +4€/billet (10h-22h). Sold out systématique. Walibi Winter en décembre = 3e saison événementielle.",
+        "Seasonal overlays (Halloween, Christmas) avec majoration 20-30% des pass journaliers. Merch thématique dédié par événement."],
+      ["Bundles",
+        "Formules groupe dès 44€ (≥10 pers.). Offres F&B dans les restaurants du parc. Pass combine Walibi + Aqualibi.",
+        "Disney Dining Plan = bundle repas prépayé. Capture 40%+ du budget F&B avant la visite. Magic Tickets combine hébergement + entrée + F&B."],
+      ["Parking",
+        "Parking payant 13€/voiture/jour (standard). Aucune gratuité. Inclus dans certains pass premium.",
+        "Parking payant 25-30$ (standard) / 50$+ (preferred). Inclus dans certains pass annuels uniquement."],
+      ["Merchandising",
+        "Boutiques dans le parc + photo on-ride. ~15-20% du CA hors entrées.",
+        "Sortie obligatoire par boutique. Photo souvenir opt-out. Merch = 30-40% du CA total."],
+      ["Abonnement",
+        "5 tiers de pass annuels : Walibi Pass 155€ → Diamond 730€. Add-ons parking, boisson, FastLane. Fidélisation + cash upfront.",
+        "Annual Pass à 3-4 tiers. Blockout dates sur tiers inférieurs = outil yield. Tier le plus cher = zéro restriction."]
+    ];
+    const tbl = h("table", { class: "bench-table" });
+    const head = h("tr", null,
+      h("th", { style: "width:130px" }, "Levier"),
+      h("th", null, "Walibi Belgium"),
+      h("th", null, "Walt Disney Parks"));
+    tbl.appendChild(head);
+    rows.forEach(r => {
+      const tr = h("tr", null);
+      tr.appendChild(h("td", { style: "font-family:'Fraunces',serif; color:var(--navy); font-weight:600; vertical-align:top" }, r[0]));
+      tr.appendChild(h("td", { style: "vertical-align:top" }, r[1]));
+      tr.appendChild(h("td", { style: "vertical-align:top" }, r[2]));
+      tbl.appendChild(tr);
+    });
+    return tbl;
+  }
+
+  function buildPhase2Table() {
+    const rows = [
+      ["1.5", "Variabilité prix capacité / créneau / canal",
+        "Quel seuil de prix tient sans perte de volume mesurable, par jour, créneau, canal ?",
+        "Aventuriers (>1m55) + Explorateurs (<1m). Prix testés : 14/15,50/17/19€ Aventurier · 7/9/10,50/12/14€ Explorateur",
+        "Van Westendorp + Gabor-Granger · ~180 répondants · 5 vagues fieldwork",
+        "Prix cible par segment ± 0,50€"],
+      ["1.3", "Calendrier événementiel",
+        "Quelle majoration tient pour Halloween, Saint-Nicolas, fête des mères ? Quel coût marginal max acceptable ?",
+        "Tous segments. Test sur événement été 2026 (1 weekend) à prix majoré.",
+        "Croisement CA quotidien × calendrier scolaire × événements + test estival comparatif.",
+        "Calendrier 2026-2027 + majoration cible/événement"],
+      ["1.6", "Upsell dynamique « dernières places »",
+        "À partir de quel taux de remplissage les visiteurs acceptent-ils un pack premium ? Quel prix tient sur les 20 dernières places ?",
+        "Visiteurs ayant réservé en quasi-saturation. Quota : 30 répondants en peak.",
+        "Discrete choice : pack standard 14,50€ vs pack premium 35-50€ all-in. Test technique faisabilité Apex en parallèle.",
+        "Architecture pricing dynamique + seuil déclenchement"],
+      ["1.2", "Bundle parent+enfant structuré",
+        "Quelle composition de bundle maximise conversion et panier moyen ? Quel risque de cannibalisation Baloo Bar ?",
+        "Familles avec ≥1 enfant Aventurier. Décisionnaire = mère (74% des clients).",
+        "MaxDiff : 4-5 compositions testées. Mesure cannibalisation post-déploiement.",
+        "Composition bundle + prix + canaux de mise en avant"],
+      ["1.10", "Architecture decoy anniv. + tier Gold+",
+        "Quel re-pricing du Silver rend le Gold attractif ? Quelle inclusion Gold+ à 30€ capture le top du marché ?",
+        "Parents organisateurs d'anniversaires. Sample : 30 répondants Wave 4.",
+        "Discrete choice Bronze/Silver/Gold/Gold+ à différents prix. Mesure du shift de mix.",
+        "Re-pricing Silver + composition tier Gold+ + inclusions"]
+    ];
+    const tbl = h("table", { class: "bench-table" });
+    const head = h("tr", null,
+      h("th", { style: "width:50px" }, "#"),
+      h("th", { style: "width:180px" }, "Levier"),
+      h("th", null, "Question business"),
+      h("th", null, "Segment cible"),
+      h("th", null, "Méthode"),
+      h("th", null, "Décision Gate #2"));
+    tbl.appendChild(head);
+    rows.forEach(r => {
+      const tr = h("tr", null);
+      tr.appendChild(h("td", { style: "font-family:'JetBrains Mono',monospace; color:var(--purple); font-weight:600" }, r[0]));
+      tr.appendChild(h("td", { style: "font-family:'Fraunces',serif; color:var(--navy); font-weight:600; vertical-align:top" }, r[1]));
+      tr.appendChild(h("td", { style: "vertical-align:top" }, r[2]));
+      tr.appendChild(h("td", { style: "vertical-align:top" }, r[3]));
+      tr.appendChild(h("td", { style: "vertical-align:top" }, r[4]));
+      tr.appendChild(h("td", { style: "vertical-align:top; font-weight:600; color:var(--navy)" }, r[5]));
       tbl.appendChild(tr);
     });
     return tbl;

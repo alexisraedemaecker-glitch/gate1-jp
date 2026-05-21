@@ -28,6 +28,7 @@
   const state = {
     user: null,
     activeTab: "opps",          // opps | arb | dash | profile
+    oppListDetailed: false,     // toggle expand/collapse synthèse on list
     presenterView: "deck",      // deck | atelier (presenter only)
     slideIdx: 0,
     evaluations: {},
@@ -298,12 +299,72 @@
     return state.evaluations[oppId] && state.evaluations[oppId][state.user.uid];
   }
 
+  function outilTagClass(outil) {
+    if (!outil) return "tag-todo";
+    const s = outil.toLowerCase();
+    if (s.startsWith("ext")) return "tag-ext";
+    if (s.startsWith("mixte")) return "tag-mixte";
+    return "tag-int";
+  }
+
+  function renderOppMetaStrip(opp) {
+    const parts = [];
+    if (opp.outil) parts.push(el("span", { class: "mi" }, el("span", { class: "tag " + outilTagClass(opp.outil), style: "padding:0 6px; font-size:9.5px" }, opp.outil)));
+    if (opp.owner_unibox) parts.push(el("span", { class: "mi" }, "Owner · ", el("b", null, opp.owner_unibox)));
+    if (opp.tempo) parts.push(el("span", { class: "mi" }, "⏱ ", el("b", null, opp.tempo)));
+    if (parts.length === 0) return el("div");
+    return el("div", { class: "opp-meta-strip" }, ...parts);
+  }
+
+  function renderOppListDetail(opp) {
+    // Embedded triple block inside card (only when "Détaillée" toggle is on)
+    const triple = el("div", { class: "triple-block", style: "margin-top:12px; margin-bottom:8px" });
+    if (opp.ce_quon_observe) triple.appendChild(el("div", null,
+      el("div", { class: "ti" }, "OBSERVE"),
+      el("div", { class: "body" }, opp.ce_quon_observe)));
+    if (opp.ce_quon_deduit) triple.appendChild(el("div", null,
+      el("div", { class: "ti" }, "DÉDUIT"),
+      el("div", { class: "body" }, opp.ce_quon_deduit)));
+    if (opp.comment_on_valide) triple.appendChild(el("div", null,
+      el("div", { class: "ti" }, "VALIDE"),
+      el("div", { class: "body" }, opp.comment_on_valide)));
+    return triple;
+  }
+
+  function makeCollapsible(tag, title, contentNode, opts = {}) {
+    const open = opts.open === true;
+    const wrap = el("details", { class: "collapsible", open: open ? "" : false });
+    wrap.appendChild(el("summary", { class: "collapsible-head" },
+      el("div", { class: "lbl" },
+        tag && el("span", { class: "lbl-tag" }, tag),
+        el("span", null, title)
+      ),
+      el("span", { class: "chev" }, "▾")
+    ));
+    wrap.appendChild(el("div", { class: "collapsible-body" }, contentNode));
+    return wrap;
+  }
+
   function renderOppList() {
     const wrap = el("div", { class: "screen" });
     wrap.appendChild(el("div", { class: "eyebrow" }, "Atelier 1 · Priorisation"));
     wrap.appendChild(el("h2", { class: "title-xl" }, "Opportunités à évaluer"));
     wrap.appendChild(el("p", { class: "subtitle" },
       "15 leviers sur 3 dimensions (impact, facilité, risque). Vote anonyme, validation définitive."));
+
+    // Toggle compact / détaillée
+    wrap.appendChild(el("div", { style: "display:flex; justify-content:flex-end; margin-bottom:10px" },
+      el("div", { class: "toggle-group" },
+        el("button", {
+          class: "toggle" + (!state.oppListDetailed ? " active" : ""),
+          onClick: () => { state.oppListDetailed = false; renderParticipant(); }
+        }, "Compact"),
+        el("button", {
+          class: "toggle" + (state.oppListDetailed ? " active" : ""),
+          onClick: () => { state.oppListDetailed = true; renderParticipant(); }
+        }, "Détaillée")
+      )
+    ));
 
     const list = el("div", { class: "opp-list" });
     window.OPPORTUNITIES.forEach(opp => {
@@ -326,6 +387,8 @@
             opp.family === "convergence" ? "Convergence" : "Désaccord")
         ),
         el("div", { class: "opp-sub" }, opp.subtitle),
+        renderOppMetaStrip(opp),
+        state.oppListDetailed ? renderOppListDetail(opp) : null,
         el("div", { class: "opp-foot" },
           el("div", null,
             el("div", { class: "opp-gain-lbl" }, "GAIN ESTIMÉ"),
@@ -370,11 +433,52 @@
 
     const body = el("div", { class: "detail-body" });
 
+    // Meta strip (outil / owner / tempo)
+    const metaParts = [];
+    if (opp.outil) metaParts.push(el("span", { class: "mi" },
+      "Outil · ", el("span", { class: "tag " + outilTagClass(opp.outil), style: "padding:1px 7px; font-size:10px" }, opp.outil)));
+    if (opp.owner_unibox) metaParts.push(el("span", { class: "mi" }, "Owner · ", el("b", null, opp.owner_unibox)));
+    if (opp.tempo) metaParts.push(el("span", { class: "mi" }, "⏱ Tempo · ", el("b", null, opp.tempo)));
+    if (opp.convergence_label) metaParts.push(el("span", { class: "mi" }, el("b", null, opp.convergence_label)));
+    if (metaParts.length) {
+      body.appendChild(el("div", { class: "opp-meta-strip", style: "margin-bottom:14px" }, ...metaParts));
+    }
+
     // Description
     body.appendChild(el("div", { class: "section" },
       el("h3", { class: "section-h" }, "Description"),
       el("p", null, opp.description)
     ));
+
+    // Synthèse — observe / déduit / valide (3 colonnes du deck slides 11-12)
+    if (opp.ce_quon_observe || opp.ce_quon_deduit || opp.comment_on_valide) {
+      const triple = el("div", { class: "triple-block" });
+      if (opp.ce_quon_observe) triple.appendChild(el("div", null,
+        el("div", { class: "ti" }, "CE QU'ON OBSERVE"),
+        el("div", { class: "body" }, opp.ce_quon_observe)));
+      if (opp.ce_quon_deduit) triple.appendChild(el("div", null,
+        el("div", { class: "ti" }, "CE QU'ON EN DÉDUIT"),
+        el("div", { class: "body" }, opp.ce_quon_deduit)));
+      if (opp.comment_on_valide) triple.appendChild(el("div", null,
+        el("div", { class: "ti" }, "COMMENT ON VALIDE"),
+        el("div", { class: "body" }, opp.comment_on_valide)));
+      body.appendChild(el("div", { class: "section" },
+        el("h3", { class: "section-h" }, "Synthèse — observe · déduit · valide"),
+        triple
+      ));
+    }
+
+    // Distinction observé / hypothèse / à tester — collapsibles
+    if (opp.observe_data || opp.hypothese || opp.a_tester) {
+      const wrap = el("div", null);
+      if (opp.observe_data) wrap.appendChild(makeCollapsible("✓", "Observé — confirmé par data", el("p", null, opp.observe_data)));
+      if (opp.hypothese) wrap.appendChild(makeCollapsible("🔬", "Hypothèse — déduction Verdeen", el("p", null, opp.hypothese)));
+      if (opp.a_tester) wrap.appendChild(makeCollapsible("⏳", "À tester — Phase 2 / data à obtenir", el("p", null, opp.a_tester)));
+      body.appendChild(el("div", { class: "section" },
+        el("h3", { class: "section-h" }, "Distinction · Observé · Hypothèse · À tester"),
+        wrap
+      ));
+    }
 
     // Quantification
     const quantSection = el("div", { class: "section" });
@@ -1061,6 +1165,8 @@
       `${evalCount} évaluation(s) enregistrée(s) au total`));
 
     panel.appendChild(el("div", { class: "session-row" },
+      el("button", { class: "btn btn-primary", onClick: exportSessionJSON }, "📥 Exporter JSON"),
+      el("button", { class: "btn btn-secondary", onClick: openUnlockDialog }, "🔓 Débloquer"),
       el("button", { class: "btn btn-secondary", onClick: () => {
         showModal("Réinitialiser la session ?", "Toutes les évaluations et arbitrages seront supprimés.", () => {
           if (!db) { state.evaluations = {}; state.arbitrages = {}; state.users = {}; renderPresenter(); return; }
@@ -1069,10 +1175,56 @@
             toast("Session réinitialisée");
           });
         });
-      } }, "🔄 Réinitialiser"),
-      el("button", { class: "btn btn-secondary", onClick: openUnlockDialog }, "🔓 Débloquer")
+      } }, "🔄 Réinitialiser")
     ));
     return panel;
+  }
+
+  function exportSessionJSON() {
+    const payload = {
+      session_id: SESSION,
+      exported_at: new Date().toISOString(),
+      users: state.users,
+      evaluations: state.evaluations,
+      arbitrages: state.arbitrages,
+      session: state.session,
+      opportunities_metadata: window.OPPORTUNITIES.map(o => ({
+        id: o.id, ref: o.ref, title: o.title, family: o.family,
+        score_verdeen: o.score_verdeen, gain_range: o.gain_range,
+        outil: o.outil, owner_unibox: o.owner_unibox, tempo: o.tempo
+      })),
+      // Agrégats prêts à analyser
+      aggregates: computeMatrixStats(true).map(s => ({
+        opp_id: s.opp.id, ref: s.opp.ref, title: s.opp.title, family: s.opp.family,
+        n_real_votes: s.n,
+        n_total_votes: s.n_total || s.n,
+        impact_avg: round1(s.impact_avg),
+        facilite_avg: round1(s.facilite_avg),
+        risque_avg: round1(s.risque_avg),
+        composite_avg: round1(s.composite_avg),
+        impact_std: round1(s.impact_std),
+        facilite_std: round1(s.facilite_std)
+      })),
+      arbitrage_summary: window.OPPORTUNITIES.map(o => {
+        const votes = Object.entries(state.arbitrages[o.id] || {});
+        const counts = { GO: 0, GO_WTP: 0, WTP: 0, PARK: 0 };
+        votes.forEach(([, v]) => { if (counts[v.choice] != null) counts[v.choice]++; });
+        return { opp_id: o.id, ref: o.ref, total_votes: votes.length, ...counts };
+      }).filter(x => x.total_votes > 0)
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gate1-jp_${SESSION}_${new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast("Export téléchargé ✓");
+  }
+
+  function round1(n) {
+    if (n == null || !isFinite(n)) return null;
+    return Math.round(n * 10) / 10;
   }
 
   function openUnlockDialog() {
